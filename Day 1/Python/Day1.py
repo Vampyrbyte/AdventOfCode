@@ -8,3 +8,10 @@ for number in numbers:
         break
     else:
         print("not this one")
+for number in numbers:
+    for number2 in numbers:
+        number3 = 2020 - (number + number2)
+        if number3 in numbers:
+            print("found it")
+            print(number * number2 * number3)
+            break

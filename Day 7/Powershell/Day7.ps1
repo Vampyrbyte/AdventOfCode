@@ -33,7 +33,7 @@ Function Get-ParentsList{
         ForEach($Parent in $ParentsList){
             #Write-Host $Parent
             $GrandParents = Get-ParentsList($Parent)
-            If($GrandParents -ne $null){
+            If($null -ne $GrandParents){
                 #Write-Host $GrandParents
                 if($GrandParents.count -eq 1){
                     $Null = $GrandParentsList.add($GrandParents)
@@ -46,6 +46,25 @@ Function Get-ParentsList{
         $Null = $Parentslist.Addrange($GrandParentsList)
     }
     return $ParentsList
+}
+
+function Get-TotalBags{
+    Param(
+        [int]$BagID
+    )
+    [int]$TotalBags = 0
+    $Bag = $Bags[$BagID]
+    ForEach($Child in $Bag.Contains){
+        $TotalBags = $TotalBags + $Child.Quantity
+    }
+    $GrandChildBags = 0
+    if($null -ne $Bag.Contains){
+        ForEach($GrandChild in $Bag.Contains){
+            $GrandChildBags = $GrandChildBags + ($GrandChild.Quantity * (Get-TotalBags($GrandChild.id)))
+        }
+    }
+    $TotalBags = $GrandChildBags + $TotalBags
+    return $TotalBags
 }
     
 
@@ -63,7 +82,7 @@ ForEach($InputD in $InputData){
     if(-not ($Containers -contains "no other")){
         ForEach($Container in $Containers){
             $ContainerSplit = $Container.split(" ")
-            $Quantity = $ContainerSplit[0]
+            [int]$Quantity = $ContainerSplit[0]
             $Modifier = $ContainerSplit[1]
             $Colour = $ContainerSplit[2]
             $Index = Get-IndexOfBag($Modifier, $Colour)
@@ -74,7 +93,7 @@ ForEach($InputD in $InputData){
     $Bags += $Bag
     $LoopNum++
 }
-#Write-Host (Get-ParentsList(Get-IndexOfBag("shiny","gold")))
-$Result = Get-ParentsList(Get-IndexOfBag("shiny","gold"))
-$UniqueResult = $Result | Sort-Object | Get-Unique
-Write-Host $UniqueResult.Count
+$Part1 = (Get-ParentsList(Get-IndexOfBag("shiny","gold")) | Sort-Object | Get-Unique).count
+$Part2 = Get-TotalBags(Get-IndexOfBag("shiny","gold"))
+Write-Host "Part 1" $Part1
+Write-Host "Part 2" $Part2

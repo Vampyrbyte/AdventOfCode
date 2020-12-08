@@ -1,3 +1,4 @@
+$Stopwatch = [system.diagnostics.stopwatch]::StartNew()
 $InputData = Get-Content $PSScriptRoot\input.txt
 $Acc = 0
 $ProgramCounter = 0
@@ -54,3 +55,5 @@ do{
 }
 while ($ProgramCounter -lt $InputData.count)
 Write-Host "Final ACC: " $Acc
+$Stopwatch.stop()
+$Stopwatch

@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 	var lines []int
 	file, _ := os.Open("./input")
 	defer file.Close()
@@ -26,5 +28,7 @@ func main() {
 
 	}
 	fmt.Println(counter)
+	elapsed := time.Since(start)
+	fmt.Printf("Duration: %s", elapsed)
 
 }
